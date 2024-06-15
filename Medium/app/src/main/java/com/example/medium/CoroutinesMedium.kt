@@ -62,6 +62,16 @@ fun getDataByFlow(): Flow<Float> {
     }
 }
 
+fun getDataByFlowStatic(): Flow<Float> {
+    return flow {
+        (1..5).forEach {
+            println("Processing something...")
+            delay(300)
+            emit(20 + it + Random.nextFloat())
+        }
+    }
+}
+
 fun sequences() {
     newTopic("Sequences")
     getDataBySeq().forEach { println("$it") }
@@ -188,5 +198,42 @@ fun dispatchers() {
                 endMsg()
             }
         }
+    }
+}
+
+fun getMatchResultsFlow(): Flow<String> {
+    return flow {
+        var homeTeam = 0
+        var awayTeam = 0
+        (0..45).forEach {
+            println("minuto: $it")
+            delay(50)
+            homeTeam += Random.nextInt(0, 21)/20
+            awayTeam += Random.nextInt(0, 21)/20
+            emit("$homeTeam-$awayTeam")
+
+            // Manual Exception to throw for the latest lesson
+            if (homeTeam == 2 || awayTeam == 2) throw Exception("2 goals are not allowed")
+        }
+    }
+}
+
+fun getCitiesFlow(): Flow<String> = flow {
+    listOf("Santander", "Vigo", "Madrid", "Santiago")
+        .forEach { city ->
+            println("\nSearching cities...")
+            delay(1_000)
+            emit(city)
+        }
+}
+
+fun getDataToFlatFlow(city: String): Flow<Float> = flow{
+    (1..4).forEach {
+        println("Yesterday Temperature in $city...")
+        emit(Random.nextInt(10, 30).toFloat())
+
+        println("Actual Temperature in $city:")
+        delay(100)
+        emit(20 + it + Random.nextFloat())
     }
 }
